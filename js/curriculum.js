@@ -1,0 +1,179 @@
+// curriculum.js — modules, levels and progression rules.
+//
+// Design principles (informed by standard aural-skills pedagogy):
+//   * Start each skill with a 2-way contrast between maximally distinct sounds,
+//     then widen the pool one or two items at a time.
+//   * Melodic before harmonic; major before minor; diatonic before chromatic.
+//   * Functional listening (scale degrees, progressions) is trained against a
+//     cadence so the ear learns tonal context, not absolute pitch tricks.
+//   * Every level states its goal plainly: "get NEED of your last WINDOW right".
+
+export const MODULES = [
+  {
+    id: 'pitch',
+    title: 'Pitch',
+    icon: '⇅',
+    color: 'sky',
+    kind: 'choice',
+    prompt: 'Is the second note higher or lower?',
+    blurb: 'Higher or lower? The very first skill — and the foundation of everything else.',
+    tip: 'Sing or hum both notes back (out loud or in your head). Your voice knows which way it moved even when your ear feels unsure.',
+    window: 12, need: 10,
+    levels: [
+      { name: 'Big leaps',    hint: 'Notes are far apart (a 5th or more).', gap: [7, 12] },
+      { name: 'Medium steps', hint: 'Notes get closer together.',           gap: [3, 6] },
+      { name: 'Small steps',  hint: 'Just one or two semitones apart.',     gap: [1, 2] },
+      { name: 'Fine tuning',  hint: 'One semitone apart — or the same note twice.', gap: [1, 1], allowSame: true },
+    ],
+  },
+  {
+    id: 'intervals',
+    title: 'Intervals',
+    icon: '⌒',
+    color: 'violet',
+    kind: 'choice',
+    prompt: 'What interval is this?',
+    blurb: 'The distance between two notes. Learn all twelve, up, down, and together.',
+    tip: 'Anchor each interval to a song you know (shown when you miss one). Over time the song fades and the sound itself remains.',
+    window: 12, need: 10,
+    levels: [
+      { name: 'First steps',     hint: 'Octave vs Perfect 5th — the two most distinctive intervals.', dirs: ['a'], items: ['P8', 'P5'] },
+      { name: 'Perfect 4th',     hint: 'The 4th joins in.', dirs: ['a'], items: ['P8', 'P5', 'P4'] },
+      { name: 'Seconds',         hint: 'Stepwise motion — most melodies are made of these.', dirs: ['a'], items: ['P8', 'P5', 'P4', 'M2', 'm2'] },
+      { name: 'Thirds',          hint: 'The intervals that give chords their colour.', dirs: ['a'], items: ['P8', 'P5', 'P4', 'M2', 'm2', 'M3', 'm3'] },
+      { name: 'Tritone',         hint: 'The famous dissonance, splitting the octave in half.', dirs: ['a'], items: ['P8', 'P5', 'P4', 'M2', 'm2', 'M3', 'm3', 'TT'] },
+      { name: 'Sixths',          hint: 'Wide and sweet. Easily confused with 5ths and 7ths.', dirs: ['a'], items: ['P8', 'P5', 'P4', 'M2', 'm2', 'M3', 'm3', 'TT', 'M6', 'm6'] },
+      { name: 'Sevenths',        hint: 'All twelve ascending intervals.', dirs: ['a'], items: ['P8', 'P5', 'P4', 'M2', 'm2', 'M3', 'm3', 'TT', 'M6', 'm6', 'M7', 'm7'] },
+      { name: 'Descending I',    hint: 'Going down sounds different — start with the easy five.', dirs: ['d'], items: ['P8', 'P5', 'P4', 'M3', 'm3'] },
+      { name: 'Descending II',   hint: 'All twelve intervals, descending.', dirs: ['d'], items: ['P8', 'P5', 'P4', 'M2', 'm2', 'M3', 'm3', 'TT', 'M6', 'm6', 'M7', 'm7'] },
+      { name: 'Harmonic I',      hint: 'Both notes at once. Listen for roughness vs sweetness.', dirs: ['h'], items: ['P8', 'P5', 'P4', 'M3', 'm3', 'TT'] },
+      { name: 'Harmonic II',     hint: 'All twelve, sounded together.', dirs: ['h'], items: ['P8', 'P5', 'P4', 'M2', 'm2', 'M3', 'm3', 'TT', 'M6', 'm6', 'M7', 'm7'] },
+      { name: 'All directions',  hint: 'Up, down or together — at random.', dirs: ['a', 'd', 'h'], items: ['P8', 'P5', 'P4', 'M2', 'm2', 'M3', 'm3', 'TT', 'M6', 'm6', 'M7', 'm7'] },
+      { name: 'Compound',        hint: 'Beyond the octave: 9ths, 11ths and 12ths.', dirs: ['a'], items: ['M7', 'P8', 'm9', 'M9', 'P11', 'P12'] },
+    ],
+  },
+  {
+    id: 'chords',
+    title: 'Chords',
+    icon: '♬',
+    color: 'amber',
+    kind: 'choice',
+    prompt: 'What chord is this?',
+    blurb: 'From major vs minor to ninths and inversions — name the colour of a chord.',
+    tip: 'First react to the overall mood (bright, dark, tense, floating), then check the top and bottom notes. Don\'t dissect — let the gestalt hit you first.',
+    window: 12, need: 10,
+    levels: [
+      { name: 'Major vs Minor',  hint: 'The fundamental contrast: bright vs dark.', items: ['maj', 'min'] },
+      { name: 'Diminished',      hint: 'Tense and unstable — wants to resolve.', items: ['maj', 'min', 'dim'] },
+      { name: 'Augmented',       hint: 'Dreamlike, floating, unresolved.', items: ['maj', 'min', 'dim', 'aug'] },
+      { name: 'Seventh chords',  hint: 'Four-note chords: bluesy, jazzy, or mellow.', items: ['dom7', 'maj7', 'min7'] },
+      { name: 'Darker sevenths', hint: 'Half-diminished and fully diminished join in.', items: ['dom7', 'maj7', 'min7', 'm7b5', 'dim7'] },
+      { name: 'Triads + sevenths', hint: 'Everything so far, mixed together.', items: ['maj', 'min', 'dim', 'aug', 'dom7', 'maj7', 'min7', 'm7b5', 'dim7'] },
+      { name: 'Suspended',       hint: 'No third — open and unresolved.', items: ['maj', 'min', 'sus2', 'sus4'] },
+      { name: 'Inversions',      hint: 'Same chord, different note in the bass.', items: ['maj', 'maj_1', 'maj_2', 'min', 'min_1', 'min_2'] },
+      { name: 'Colour chords',   hint: 'Sixths and the minor-major 7th.', items: ['maj6', 'min6', 'maj7', 'min7', 'mM7'] },
+      { name: 'Ninths',          hint: 'Five-note extended chords vs their 7th-chord cousins.', items: ['dom7', 'dom9', 'maj7', 'maj9', 'min7', 'min9'] },
+      { name: 'The gauntlet',    hint: 'Thirteen chord types. Good luck.', items: ['maj', 'min', 'dim', 'aug', 'sus4', 'dom7', 'maj7', 'min7', 'm7b5', 'dim7', 'mM7', 'maj6', 'min6'] },
+    ],
+  },
+  {
+    id: 'scales',
+    title: 'Scales & Modes',
+    icon: '𝄚',
+    color: 'emerald',
+    kind: 'choice',
+    prompt: 'What scale is this?',
+    blurb: 'Major, minor, pentatonic, the church modes, and beyond.',
+    tip: 'Listen for the notes that differ from plain major or minor — the raised 7th of harmonic minor, the bright ♯4 of Lydian, the ♭7 of Mixolydian.',
+    window: 12, need: 10,
+    levels: [
+      { name: 'Major vs Minor',     hint: 'The two scales behind most Western music.', items: ['major', 'natmin'] },
+      { name: 'Three minors',       hint: 'Natural, harmonic, melodic — spot the raised notes.', items: ['natmin', 'harmmin', 'melmin'] },
+      { name: 'Pentatonic & Blues', hint: 'Five- and six-note scales.', items: ['majpent', 'minpent', 'blues'] },
+      { name: 'Modes I',            hint: 'Dorian and Mixolydian vs plain major and minor.', items: ['major', 'dorian', 'mixolydian', 'natmin'] },
+      { name: 'Modes II',           hint: 'The more exotic modes.', items: ['dorian', 'phrygian', 'lydian', 'mixolydian', 'locrian'] },
+      { name: 'All modes',          hint: 'All seven church modes.', items: ['major', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'natmin', 'locrian'] },
+      { name: 'Exotic',             hint: 'Symmetric and harmonic-minor flavours.', items: ['harmmin', 'phrygdom', 'wholetone', 'dimhw'] },
+      { name: 'Grand mix',          hint: 'Twelve scales — the full menu.', items: ['major', 'natmin', 'harmmin', 'melmin', 'majpent', 'minpent', 'blues', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'wholetone'] },
+    ],
+  },
+  {
+    id: 'degrees',
+    title: 'Scale Degrees',
+    icon: '◉',
+    color: 'rose',
+    kind: 'choice',
+    prompt: 'Which scale degree is this?',
+    blurb: 'Hear a key, then name where a note sits inside it. The core of functional hearing.',
+    tip: 'After the cadence, sing the note down (or up) to Do before answering. The pull each degree feels toward home is what you\'re learning.',
+    window: 12, need: 10,
+    levels: [
+      { name: 'Home base',        hint: 'Do, Mi, Sol — the tonic chord.', mode: 'major', items: ['do', 'mi', 'sol'] },
+      { name: 'Re & Fa',          hint: 'The neighbours join in.', mode: 'major', items: ['do', 're', 'mi', 'fa', 'sol'] },
+      { name: 'Full major scale', hint: 'All seven diatonic degrees.', mode: 'major', items: ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti'] },
+      { name: 'Wide range',       hint: 'Same degrees, spread across two octaves.', mode: 'major', items: ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti'], wide: true },
+      { name: 'Minor key',        hint: 'The same skill in a minor key.', mode: 'minor', items: ['do', 're', 'me', 'fa', 'sol', 'le', 'te'] },
+      { name: 'Chromatic',        hint: 'All twelve degrees in a major context.', mode: 'major', items: ['do', 'ra', 're', 'me', 'mi', 'fa', 'fi', 'sol', 'le', 'la', 'te', 'ti'] },
+    ],
+  },
+  {
+    id: 'progressions',
+    title: 'Progressions',
+    icon: '⛓',
+    color: 'cyan',
+    kind: 'sequence',
+    prompt: 'Name the chords you hear',
+    blurb: 'Hear a key, then identify each chord of a progression by its Roman numeral.',
+    tip: 'Track the bass line first — it usually walks from root to root. Then confirm with each chord\'s colour: is it the bright IV or the wistful vi?',
+    window: 10, need: 7,
+    levels: [
+      { name: 'Primary chords', hint: 'I, IV and V — three chords, starting on I.', mode: 'major', length: 3, startTonic: true, pool: ['I', 'IV', 'V'] },
+      { name: 'The pop vi',     hint: 'The minor vi joins the family.', mode: 'major', length: 4, startTonic: true, pool: ['I', 'IV', 'V', 'vi'] },
+      { name: 'Add the ii',     hint: 'Four chords from a five-chord pool.', mode: 'major', length: 4, startTonic: true, pool: ['I', 'ii', 'IV', 'V', 'vi'] },
+      { name: 'Any start',      hint: 'All six diatonic chords; no guaranteed I at the start.', mode: 'major', length: 4, startTonic: false, pool: ['I', 'ii', 'iii', 'IV', 'V', 'vi'] },
+      { name: 'Minor key',      hint: 'Functional hearing in minor.', mode: 'minor', length: 4, startTonic: true, pool: ['i', 'iv', 'V', 'VI', 'VII'] },
+      { name: 'Longer lines',   hint: 'Five chords, any start.', mode: 'major', length: 5, startTonic: false, pool: ['I', 'ii', 'iii', 'IV', 'V', 'vi'] },
+    ],
+  },
+  {
+    id: 'melodies',
+    title: 'Melodies',
+    icon: '♪',
+    color: 'fuchsia',
+    kind: 'melody',
+    prompt: 'Play back the melody',
+    blurb: 'Hear a short melody, then play it back on the keyboard. Dictation, made friendly.',
+    tip: 'Don\'t memorise pitches — memorise the shape (up, down, leap, step) and where it lands relative to Do. Shape plus degrees equals the melody.',
+    window: 10, need: 7,
+    levels: [
+      { name: 'Three notes',      hint: 'Do, Re, Mi. First note shown.', length: 3, degrees: ['do', 're', 'mi'], firstGiven: true },
+      { name: 'Five-note range',  hint: 'Up to Sol. First note shown.', length: 4, degrees: ['do', 're', 'mi', 'fa', 'sol'], firstGiven: true },
+      { name: 'Full scale',       hint: 'Any diatonic note, mostly stepwise.', length: 4, degrees: ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti'], firstGiven: true },
+      { name: 'Leaps',            hint: 'Bigger jumps between chord tones.', length: 5, degrees: ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti'], firstGiven: true, leapy: true },
+      { name: 'Longer lines',     hint: 'Six notes — and no first note shown.', length: 6, degrees: ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti'], firstGiven: false },
+      { name: 'Chromatic touches', hint: 'Seven notes with occasional chromatic colour.', length: 7, degrees: ['do', 're', 'mi', 'fa', 'sol', 'la', 'ti'], firstGiven: false, chromatic: 0.18 },
+    ],
+  },
+];
+
+export const moduleById = id => MODULES.find(m => m.id === id);
+
+// Onboarding paths pre-unlock levels (index < n is unlocked) so experienced
+// users aren't forced to grind through "higher or lower".
+export const ONBOARDING_PATHS = {
+  fresh: {
+    label: 'Brand new to this',
+    desc: 'Start from the very beginning with higher-vs-lower. You\'ll move fast.',
+    unlocks: {},
+  },
+  basics: {
+    label: 'I know some basics',
+    desc: 'Skip the warm-up. Start partway into intervals and chords.',
+    unlocks: { pitch: 99, intervals: 4, chords: 3, scales: 1, degrees: 1, progressions: 1, melodies: 1 },
+  },
+  experienced: {
+    label: 'Experienced ear',
+    desc: 'Jump straight to harmonic intervals, sevenths, modes and functional work.',
+    unlocks: { pitch: 99, intervals: 9, chords: 7, scales: 4, degrees: 3, progressions: 3, melodies: 3 },
+  },
+};
