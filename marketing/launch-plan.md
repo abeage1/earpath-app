@@ -5,7 +5,7 @@ Strategy: free/organic channels first (this is a niche where organic works), spe
 
 ## Sequencing
 
-1. **Week 0 (before posting anywhere):** domain live, analytics live, feedback widget live. Soft-test with 2–3 friends/musicians; fix anything embarrassing.
+1. **Week 0 (before posting anywhere):** domain live ✅, analytics live, feedback widget live. Soft-test with 2–3 friends/musicians; fix anything embarrassing.
 2. **Week 1 — friendly niche communities** (low stakes, high-quality feedback):
    - r/musictheory "weekly How do I learn X?" thread + standalone post if mods allow tools
    - r/WeAreTheMusicMakers (check self-promo rules: Feedback Friday / 9:1 rule)

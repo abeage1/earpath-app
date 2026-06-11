@@ -1,6 +1,6 @@
 # earpath — ear training, one step at a time
 
-**[▶ Live app →](https://abeage1.github.io/earpath-app/)**
+**[▶ Live app →](https://earpath.app/)**
 
 > **This app is young and actively improving — feedback is gold.** Use the 💬 button in the app, [open an issue](https://github.com/abeage1/earpath-app/issues/new/choose), or email. Every note gets read.
 

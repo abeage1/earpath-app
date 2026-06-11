@@ -1,6 +1,6 @@
 # Ready-to-post launch drafts
 
-Adjust the URL to the final domain before posting. Post as yourself; these are written in your voice as the project owner. Feel free to edit — authenticity beats polish on every one of these platforms.
+Post as yourself; these are written in your voice as the project owner. Feel free to edit — authenticity beats polish on every one of these platforms.
 
 ---
 
@@ -41,7 +41,7 @@ Design choices I'd love opinions on:
 - Interval misses show reference-song mnemonics; chord/scale misses let you A/B your answer vs. the correct one from the same root
 - Movable-do solfege by default (numbers available in settings)
 
-It's free, open source, no account, works offline: [URL]
+It's free, open source, no account, works offline: https://earpath.app
 
 What's wrong with the pedagogy? What would you add or reorder? I'll be in the comments.
 
@@ -53,7 +53,7 @@ What's wrong with the pedagogy? What would you add or reorder? I'll be in the co
 
 **Text:**
 
-Free, no signup, works on your phone: [URL]
+Free, no signup, works on your phone: https://earpath.app
 
 You pick a starting point (brand new / know some basics / experienced), and it gives you small, clearly-scoped levels across intervals, chords, scales, scale degrees, progressions, and melodic dictation. It tracks which sounds you confuse with which (turns out I can't tell major 6ths from perfect 5ths to save my life) and feeds you more of what you're weak at.
 
@@ -73,7 +73,7 @@ Stack: zero. No framework, no build step, no server. Vanilla ES modules + Web Au
 
 Product idea: ear training has a brutal cold-start problem (beginners get 12 intervals dumped on them) and a boredom problem (most tools cap out at basics). earpath is 7 skill ladders × ~8 small levels each, with adaptive question selection, confusion tracking, and a daily mixed workout.
 
-Try it: [URL] · Source: https://github.com/abeage1/earpath-app
+Try it: https://earpath.app · Source: https://github.com/abeage1/earpath-app
 
 Honest feedback wanted — especially on the first 5 minutes of using it.
 
