@@ -104,3 +104,16 @@ Hi PH! I built earpath because every ear training tool I tried either overwhelme
 **r/piano:** lead with melodic dictation + the on-screen piano: "I built a free dictation trainer — it plays a melody, you play it back."
 **r/Guitar:** lead with intervals/chords: "Free tool to finally learn to name chords and intervals by ear."
 **r/singing:** lead with pitch + scale degrees: "Free tool that trains you to hear where a note sits in the key — the skill behind singing in tune."
+
+
+---
+
+## Modmail draft — r/musictheory (post filtered 2026-06-11)
+
+**Subject:** Filtered post — happy to follow whatever process you prefer
+
+Hi mods — I posted asking for pedagogy feedback on a free, open-source ear training site I'm building (no ads, no account, no paywall) and it was removed by Reddit's filters within a minute, I assume because my account is new and the domain is new.
+
+Post: [paste link to the removed post]
+
+If tool posts like this are welcome, would you consider approving it? If you'd rather I post it in a weekly thread, or build more history here first, just say the word — I'm genuinely after critique from people who teach this stuff, not drive-by promotion. Thanks for moderating!
