@@ -16,7 +16,12 @@ export function createPiano(container, lo, hi, { onKey, tonic } = {}) {
   for (let m = lo; m <= hi; m++) if (!isBlack(m)) whites.push(m);
   const W = 100 / whites.length;
 
-  const root = h('div', { class: 'piano', role: 'group', 'aria-label': 'Piano keyboard' });
+  const root = h('div', {
+    class: 'piano', role: 'group', 'aria-label': 'Piano keyboard',
+    // Size to the actual range: narrow ranges fit any phone without scrolling,
+    // wide ranges stay touchable and only scroll when truly necessary.
+    style: { minWidth: `${whites.length * 40}px`, maxWidth: `${whites.length * 64}px` },
+  });
   const keyEls = {};
   let enabled = true;
 

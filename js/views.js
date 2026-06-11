@@ -172,7 +172,12 @@ export function renderModule(root, moduleId) {
         h('h1', {}, mod.title),
         h('p', { class: 'muted' }, mod.blurb))),
     h('div', { class: 'tipbox' }, h('strong', {}, 'How to listen · '), mod.tip),
-    h('div', { class: 'level-list' }, rows));
+    h('div', { class: 'level-list' }, rows),
+    State.state.settings.freeRoam
+      ? null
+      : h('p', { class: 'tiny muted', style: { textAlign: 'center', marginTop: '0.9rem' } },
+          'Prefer to jump around? Turn on “Unlock all levels” in ',
+          h('a', { href: '#/settings' }, 'Settings'), '.'));
 
   root.append(page);
   return () => {};
@@ -357,6 +362,8 @@ export function renderSettings(root) {
         },
         onchange: () => { State.save(); Audio.unlock(); Audio.playNote(60, 0.4); },
       })),
+    row('Unlock all levels', 'Free roam: practice any level in any module, no progression required. Level completion still tracks.',
+      toggle(s.freeRoam, v => { s.freeRoam = v; State.save(); track('free_roam', { on: v }); })),
     row('Auto-advance', 'Move to the next question automatically after a correct answer.',
       toggle(s.autoAdvance, v => { s.autoAdvance = v; State.save(); })),
     row('Chord playback', 'Arpeggiating after the block chord helps you hear individual notes.',

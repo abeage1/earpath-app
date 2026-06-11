@@ -57,6 +57,7 @@ function runSession(root, cfg) {
   // ── static shell ───────────────────────────────────────────────────────────
   const playBtn = h('button', { class: 'playbtn', 'aria-label': 'Play / replay', onclick: () => playQ() }, '▶');
   const promptEl = h('div', { class: 's-prompt' });
+  const howToEl = h('div', { class: 's-howto' });
   const chipEl = h('div', { class: 's-chip' });
   const goalEl = h('div', { class: 's-goal' });
   const answersEl = h('div', { class: 's-answers' });
@@ -76,7 +77,7 @@ function runSession(root, cfg) {
         h('div', { class: 's-sub' }, cfg.subtitle)),
       scoreEl),
     h('main', { class: 's-body' },
-      h('div', { class: 's-stage' }, playBtn, chipEl, promptEl, goalEl),
+      h('div', { class: 's-stage' }, playBtn, chipEl, promptEl, howToEl, goalEl),
       answersEl, feedbackEl, actionsEl,
       h('div', { class: 's-kbd' }, '1–9 answer · R replay · ⏎ next · ⌫ undo')),
     overlayEl);
@@ -128,6 +129,7 @@ function runSession(root, cfg) {
     answersEl.innerHTML = '';
     playBtn.textContent = '▶';
     promptEl.textContent = q.prompt;
+    howToEl.textContent = moduleById(q.moduleId).howTo || '';
     chipEl.textContent = '';
     if (cfg.daily) {
       const m = moduleById(q.moduleId);
@@ -234,10 +236,12 @@ function runSession(root, cfg) {
   let slotEls = [];
 
   function renderSequence() {
-    userSeq = q.answerSeq.map((n, i) => (q.given[i] ? n : null));
-    slotEls = q.answerSeq.map((_, i) =>
-      h('div', { class: 'slot' + (q.given[i] ? ' given' : '') },
-        q.given[i] ? q.answerSeq[i] : '·'));
+    // Given slots show their value as a ghost hint — the user still performs
+    // them, so "press I first" (everyone's instinct) is the right move.
+    userSeq = q.answerSeq.map(() => null);
+    slotEls = q.answerSeq.map((n, i) =>
+      h('div', { class: 'slot' + (q.given[i] ? ' ghost' : '') },
+        q.given[i] ? n : '·'));
     optionBtns = q.options.map((opt, i) =>
       h('button', { class: 'opt numeral', onclick: () => fillSlot(opt.id) },
         i < 10 ? h('span', { class: 'opt-kbd' }, String((i + 1) % 10)) : null,
@@ -255,6 +259,7 @@ function runSession(root, cfg) {
     if (i === -1) return;
     userSeq[i] = id;
     slotEls[i].textContent = id;
+    slotEls[i].classList.remove('ghost');
     slotEls[i].classList.add('filled');
     if (!userSeq.includes(null)) submitSequence();
   }
@@ -262,10 +267,11 @@ function runSession(root, cfg) {
   function undoSlot() {
     if (answered) return;
     for (let i = userSeq.length - 1; i >= 0; i--) {
-      if (!q.given[i] && userSeq[i] !== null) {
+      if (userSeq[i] !== null) {
         userSeq[i] = null;
-        slotEls[i].textContent = '·';
+        slotEls[i].textContent = q.given[i] ? q.answerSeq[i] : '·';
         slotEls[i].classList.remove('filled');
+        if (q.given[i]) slotEls[i].classList.add('ghost');
         return;
       }
     }
@@ -292,9 +298,11 @@ function runSession(root, cfg) {
 
   // melody (dictation) ────────────────────────────────────────────────────────
   function renderMelody() {
-    userMidis = q.firstGiven ? [q.targetMidis[0]] : [];
+    // The first note is shown (slot ghost + highlighted key) but the user
+    // plays it themselves — matching everyone's instinct to start from note 1.
+    userMidis = [];
     slotEls = q.targetMidis.map((m, i) =>
-      h('div', { class: 'slot note' + (q.firstGiven && i === 0 ? ' given' : '') },
+      h('div', { class: 'slot note' + (q.firstGiven && i === 0 ? ' ghost' : '') },
         q.firstGiven && i === 0 ? midiName(m) : '·'));
 
     const pianoWrap = h('div', { class: 'piano-wrap' });
@@ -312,6 +320,7 @@ function runSession(root, cfg) {
         userMidis.push(midi);
         const i = userMidis.length - 1;
         slotEls[i].textContent = midiName(midi);
+        slotEls[i].classList.remove('ghost');
         slotEls[i].classList.add('filled');
         if (userMidis.length === q.targetMidis.length) submitMelody();
       },
@@ -321,12 +330,12 @@ function runSession(root, cfg) {
 
   function undoNote() {
     if (answered) return;
-    const min = q.firstGiven ? 1 : 0;
-    if (userMidis.length <= min) return;
+    if (userMidis.length === 0) return;
     userMidis.pop();
     const i = userMidis.length;
-    slotEls[i].textContent = '·';
+    slotEls[i].textContent = q.firstGiven && i === 0 ? midiName(q.targetMidis[0]) : '·';
     slotEls[i].classList.remove('filled');
+    if (q.firstGiven && i === 0) slotEls[i].classList.add('ghost');
   }
 
   function submitMelody() {

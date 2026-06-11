@@ -281,14 +281,13 @@ function genProgression(mod, level, levelIdx) {
     play: () => playFresh(events),
     playProgressionOnly: () => playFresh(progEvents.map(e => ({ ...e, at: e.at - progEvents[0].at }))),
     playOption: null,
-    grade(userSeq) { // userSeq aligned to slots; given slots prefilled by the view
+    grade(userSeq) { // user fills every slot; given slots are just shown as hints
       const itemResults = [];
       let allCorrect = true;
       for (let i = 0; i < seq.length; i++) {
-        if (given[i]) continue;
         const ok = userSeq[i] === seq[i];
         if (!ok) allCorrect = false;
-        itemResults.push({ key: `pg:${level.mode}:${seq[i]}`, correct: ok });
+        if (!given[i]) itemResults.push({ key: `pg:${level.mode}:${seq[i]}`, correct: ok });
       }
       return { correct: allCorrect, itemResults, confusion: null };
     },
@@ -299,10 +298,13 @@ function genProgression(mod, level, levelIdx) {
 
 function genMelody(mod, level, levelIdx) {
   const keyRoot = randInt(55, 64);
-  // Allowed scale tones across one octave, plus the upper Do.
+  // Allowed scale tones: exactly the level's stated degrees, plus the upper Do
+  // only when the level opts in — never notes beyond what the level promises
+  // (and never beyond the rendered keyboard).
   const allowed = level.degrees.map(d => keyRoot + DEGREES[d].semis);
-  allowed.push(keyRoot + 12);
+  if (level.upperDo) allowed.push(keyRoot + 12);
   allowed.sort((a, b) => a - b);
+  const top = allowed[allowed.length - 1];
 
   const startPool = level.length <= 4
     ? [keyRoot]
@@ -322,7 +324,7 @@ function genMelody(mod, level, levelIdx) {
     let m = allowed[idx];
     if (level.chromatic && Math.random() < level.chromatic && i < level.length - 1) {
       const alt = m + choice([-1, 1]);
-      if (alt > keyRoot - 1 && alt < keyRoot + 13 && !allowed.includes(alt)) m = alt;
+      if (alt > keyRoot - 1 && alt < top + 1 && !allowed.includes(alt)) m = alt;
     }
     midis.push(m);
   }
@@ -335,17 +337,16 @@ function genMelody(mod, level, levelIdx) {
   return {
     moduleId: 'melodies', levelIdx, kind: 'melody', prompt: mod.prompt,
     targetMidis: midis,
-    firstGiven: !!level.firstGiven,
+    firstGiven: !!level.firstGiven,   // first note shown as a hint; user still plays it
     tonicMidi: keyRoot,
-    keyRange: [keyRoot - 2, keyRoot + 14],
+    keyRange: [keyRoot - 1, top + 1], // every possible answer fits on the keyboard
     play: () => playFresh(events),
     playMelodyOnly: () => playFresh(Audio.melodyEvents(midis, tempo)),
     playOption: null,
     grade(userMidis) {
       let allCorrect = true;
       for (let i = 0; i < midis.length; i++) {
-        const givenNote = this.firstGiven && i === 0;
-        if (!givenNote && userMidis[i] !== midis[i]) allCorrect = false;
+        if (userMidis[i] !== midis[i]) allCorrect = false;
       }
       return {
         correct: allCorrect,

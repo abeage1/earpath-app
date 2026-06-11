@@ -426,6 +426,13 @@ button:focus-visible, a:focus-visible, select:focus-visible {
   min-height: 1.1em;
 }
 .s-prompt { font-size: 1.25rem; font-weight: 700; margin-top: 0.35rem; }
+.s-howto {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin: 0.25rem auto 0;
+  max-width: 460px;
+  min-height: 1.1em;
+}
 .s-goal { color: var(--text-dim); font-size: 0.82rem; margin-top: 0.3rem; min-height: 1.1em; }
 
 .opt-grid {
@@ -534,6 +541,7 @@ button:focus-visible, a:focus-visible, select:focus-visible {
 }
 .slot.filled { border-style: solid; color: var(--text); border-color: color-mix(in srgb, var(--mc) 55%, var(--border)); }
 .slot.given { border-style: solid; color: var(--mc); background: color-mix(in srgb, var(--mc) 10%, var(--surface)); }
+.slot.ghost { border-style: dashed; color: color-mix(in srgb, var(--mc) 75%, transparent); }
 .slot.good { border-color: var(--good); color: var(--good); border-style: solid; }
 .slot.bad { border-color: var(--bad); color: var(--bad); border-style: solid; }
 .seq-tools { display: flex; justify-content: center; margin-top: 0.7rem; }
@@ -543,7 +551,7 @@ button:focus-visible, a:focus-visible, select:focus-visible {
 .piano {
   position: relative;
   height: 150px;
-  min-width: 420px;
+  margin: 0 auto;
   user-select: none;
   touch-action: manipulation;
 }

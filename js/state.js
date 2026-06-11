@@ -10,6 +10,7 @@ const DEFAULT_SETTINGS = {
   chordStyle: 'block+arp',   // 'block' | 'block+arp' | 'arp'
   degreeLabels: 'solfege',   // 'solfege' | 'number'
   melodyTempo: 0.55,         // seconds per note
+  freeRoam: false,           // true = every level unlocked, practice anything
 };
 
 function blank() {
@@ -167,6 +168,7 @@ export function isLevelComplete(moduleId, idx) {
 }
 
 export function isLevelUnlocked(moduleId, idx) {
+  if (state.settings.freeRoam) return true;
   if (idx === 0) return true;
   if ((state.preUnlock[moduleId] || 0) > idx) return true;
   return isLevelComplete(moduleId, idx - 1);
