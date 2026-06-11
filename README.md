@@ -1,6 +1,8 @@
 # earpath — ear training, one step at a time
 
-**[▶ Live app →](https://abeage1.github.io/earpath/)**
+**[▶ Live app →](https://abeage1.github.io/earpath-app/)**
+
+> **This app is young and actively improving — feedback is gold.** Use the 💬 button in the app, [open an issue](https://github.com/abeage1/earpath-app/issues/new/choose), or email. Every note gets read.
 
 A free, open-source ear training app that meets you where you are — from "is the second note higher or lower?" all the way to ninth chords, modes, chromatic scale degrees and melodic dictation. Pure static HTML/CSS/JS: no backend, no build step, no account. All audio is synthesized in the browser with the Web Audio API, and all progress lives in your browser's localStorage.
 
@@ -83,6 +85,10 @@ sw.js                offline cache
 - [ ] Sampled instrument timbres (piano/guitar/strings) as a setting
 - [ ] Per-skill spaced-repetition review queue
 
+## Privacy
+
+Progress lives entirely in your browser's localStorage. The app collects anonymous, cookieless usage statistics (screens viewed, exercises practiced) to guide improvements — no personal data, no progress data, nothing under Do Not Track. See `js/analytics.js`; it's a no-op unless a key is set in `js/config.js`.
+
 ## Credits
 
-Successor to [earwise](https://github.com/abeage1/earwise). MIT licensed.
+Active development fork of [earpath](https://github.com/abeage1/earpath) (kept frozen as v0.1); successor to [earwise](https://github.com/abeage1/earwise). MIT licensed.

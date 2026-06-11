@@ -1,10 +1,13 @@
-// sw.js — offline support: cache-first for app assets.
-const CACHE = 'earpath-v1';
+// sw.js — offline support: network-first with cache fallback.
+const CACHE = 'earpath-v2';
 const ASSETS = [
   './',
   './index.html',
   './css/style.css',
   './js/main.js',
+  './js/config.js',
+  './js/analytics.js',
+  './js/feedback.js',
   './js/ui.js',
   './js/theory.js',
   './js/audio.js',

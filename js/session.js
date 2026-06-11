@@ -9,6 +9,7 @@ import * as State from './state.js';
 import { MODULES, moduleById } from './curriculum.js';
 import { createPiano } from './piano.js';
 import { midiName } from './theory.js';
+import { track } from './analytics.js';
 
 export function renderPractice(root, moduleId, levelIdx) {
   const mod = moduleById(moduleId);
@@ -39,6 +40,9 @@ export function renderDaily(root) {
 }
 
 function runSession(root, cfg) {
+  track('session_start', {
+    module: cfg.moduleId, level: cfg.levelIdx, daily: !!cfg.daily,
+  });
   let q = null;
   let answered = false;
   let everPlayed = false;     // becomes true after the first user-initiated play
@@ -147,14 +151,20 @@ function runSession(root, cfg) {
     updateScore();
     updateGoal();
     if (cfg.daily) dailyDone++;
+    track('question_answered', {
+      module: q.moduleId, level: q.levelIdx, kind: q.kind,
+      correct: result.correct, daily: !!cfg.daily,
+    });
 
     renderFeedback(result, extraFeedback);
 
     if (cfg.daily && dailyDone >= cfg.daily.total) {
+      track('daily_complete', { correct: sessionC, total: cfg.daily.total });
       setTimeout(() => showDailySummary(), result.correct ? 900 : 2200);
       return;
     }
     if (justCompleted && !cfg.daily) {
+      track('level_complete', { module: cfg.moduleId, level: cfg.levelIdx });
       setTimeout(() => showCelebration(), result.correct ? 900 : 1800);
       return;
     }

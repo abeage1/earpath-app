@@ -705,3 +705,78 @@ button:focus-visible, a:focus-visible, select:focus-visible {
 /* ── misc ── */
 .ring { flex: none; }
 noscript { display: block; padding: 2rem; text-align: center; color: var(--text-dim); }
+
+/* ── feedback widget ── */
+.feedback-fab {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  transition: transform 0.1s, border-color 0.15s;
+}
+.feedback-fab:hover { transform: translateY(-2px); border-color: var(--accent); }
+.feedback-fab.hidden { display: none; }
+.fab-label { font-size: 0.88rem; }
+@media (max-width: 640px) {
+  .fab-label { display: none; }
+  .feedback-fab { padding: 0.55rem 0.7rem; }
+}
+
+.feedback-modal {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.6rem 1.7rem;
+  width: min(440px, 92vw);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  animation: pop-in 0.25s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.feedback-modal h2 { margin: 0; font-size: 1.25rem; }
+.feedback-modal p { margin: 0; }
+.fb-close {
+  position: absolute;
+  top: 12px; right: 14px;
+  color: var(--text-dim);
+  font-size: 1rem;
+}
+.fb-close:hover { color: var(--text); }
+.moods { display: flex; gap: 0.5rem; }
+.mood {
+  font-size: 1.5rem;
+  width: 52px; height: 48px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  transition: transform 0.08s, border-color 0.12s;
+}
+.mood:hover { transform: scale(1.08); }
+.mood.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, var(--surface-2)); }
+.fb-text, .fb-email {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  padding: 0.6rem 0.75rem;
+  width: 100%;
+  resize: vertical;
+}
+.fb-text:focus, .fb-email:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.fb-status { color: var(--bad); font-size: 0.85rem; min-height: 1.1em; }
+.fb-send-row { display: flex; justify-content: flex-end; }
+.fb-alt { color: var(--text-dim); font-size: 0.82rem; }
+.fb-thanks { font-size: 2.4rem; text-align: center; }

@@ -5,6 +5,8 @@ import * as State from './state.js';
 import * as Audio from './audio.js';
 import { MODULES, moduleById, ONBOARDING_PATHS } from './curriculum.js';
 import { INTERVALS, CHORDS, SCALES, DEGREES } from './theory.js';
+import { track } from './analytics.js';
+import { APP_VERSION, REPO_URL } from './config.js';
 
 // ── shared chrome ─────────────────────────────────────────────────────────────
 
@@ -85,7 +87,9 @@ export function renderHome(root) {
 
     h('footer', { class: 'foot' },
       h('span', {}, 'earpath — free & open source ear training. '),
-      h('a', { href: 'https://github.com/abeage1/earpath', target: '_blank', rel: 'noopener' }, 'GitHub')));
+      h('a', { href: REPO_URL, target: '_blank', rel: 'noopener' }, 'GitHub'),
+      h('span', {}, ` · v${APP_VERSION} · `),
+      h('a', { href: `${REPO_URL}/blob/main/CHANGELOG.md`, target: '_blank', rel: 'noopener' }, 'changelog')));
 
   root.append(page);
   if (!State.state.onboarded) root.append(onboardingOverlay());
@@ -105,6 +109,7 @@ function onboardingOverlay() {
           class: 'card path-card',
           onclick: () => {
             State.applyOnboarding(path.unlocks);
+            track('onboarding_path', { path: key });
             overlay.remove();
             // Re-render home so unlock dots reflect the chosen path.
             go('#/'); window.dispatchEvent(new HashChangeEvent('hashchange'));
@@ -438,11 +443,13 @@ export function renderGuide(root) {
       h('thead', {}, h('tr', {}, h('th', {}, 'Interval'), h('th', {}, 'Ascending'), h('th', {}, 'Descending'))),
       h('tbody', {}, songRows)),
 
-    h('h2', {}, 'About'),
+    h('h2', {}, 'About & privacy'),
     h('p', { class: 'muted' },
       'earpath is free, open source, and runs entirely in your browser — no account, no server, your progress lives on your device (use Settings → Export for backups). ',
-      h('a', { href: 'https://github.com/abeage1/earpath', target: '_blank', rel: 'noopener' }, 'Source on GitHub'),
-      '. A successor to the earwise project.'));
+      h('a', { href: REPO_URL, target: '_blank', rel: 'noopener' }, 'Source on GitHub'),
+      '. A successor to the earwise project.'),
+    h('p', { class: 'muted' },
+      'Privacy: the app collects anonymous, cookieless usage statistics (which screens and exercises get used) to guide improvements — never your progress data, never anything personal, and not at all if your browser sends Do Not Track. Feedback you submit through the 💬 button is read by a human.'));
 
   root.append(page);
   return () => {};
