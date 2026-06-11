@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2 — 2026-06-13
+
+- 📱 The dictation keyboard never scrolls anymore — it always fits your screen (scrolling hid notes and could play keys while panning)
+
 ## 0.2.1 — 2026-06-13
 
 First feedback-driven release — thank you r/musictheory! 🙏

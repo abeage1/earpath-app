@@ -1,6 +1,6 @@
 // config.js — deployment configuration.
 
-export const APP_VERSION = '0.2.1';
+export const APP_VERSION = '0.2.2';
 
 // PostHog project API key (public, safe to commit). Leave empty to disable
 // all analytics — every tracking call becomes a no-op.

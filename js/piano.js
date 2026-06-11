@@ -18,9 +18,9 @@ export function createPiano(container, lo, hi, { onKey, tonic } = {}) {
 
   const root = h('div', {
     class: 'piano', role: 'group', 'aria-label': 'Piano keyboard',
-    // Size to the actual range: narrow ranges fit any phone without scrolling,
-    // wide ranges stay touchable and only scroll when truly necessary.
-    style: { minWidth: `${whites.length * 40}px`, maxWidth: `${whites.length * 64}px` },
+    // Always fit the container — a scrolling answer keyboard hides notes and
+    // plays keys while panning. Cap key width so narrow ranges don't balloon.
+    style: { maxWidth: `${whites.length * 64}px` },
   });
   const keyEls = {};
   let enabled = true;

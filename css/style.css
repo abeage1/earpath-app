@@ -547,7 +547,7 @@ button:focus-visible, a:focus-visible, select:focus-visible {
 .seq-tools { display: flex; justify-content: center; margin-top: 0.7rem; }
 
 /* ── piano ── */
-.piano-wrap { overflow-x: auto; padding-bottom: 4px; }
+.piano-wrap { padding-bottom: 4px; }
 .piano {
   position: relative;
   height: 150px;
