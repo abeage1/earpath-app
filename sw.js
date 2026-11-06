@@ -1,5 +1,5 @@
 // sw.js — offline support: cache-first for app assets.
-const CACHE = 'earpath-v1';
+const CACHE = 'earpath-v1-history-v1';
 const ASSETS = [
   './',
   './index.html',
@@ -11,6 +11,10 @@ const ASSETS = [
   './js/curriculum.js',
   './js/state.js',
   './js/engine.js',
+  './js/attempt-history.js',
+  './js/attempt-analysis.js',
+  './js/attempt-dashboard.js',
+  './css/attempt-dashboard.css',
   './js/session.js',
   './js/views.js',
   './js/piano.js',
