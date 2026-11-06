@@ -5,6 +5,7 @@
 // comparison after a miss.
 
 import * as Audio from './audio.js';
+import { appendTrial } from './attempt-history.js';
 import {
   INTERVALS, CHORDS, SCALES, DEGREES, NUMERALS, CADENCES,
   randInt, choice, weightedChoice,
@@ -28,18 +29,47 @@ function playFresh(events) {
   return Audio.playEvents(events);
 }
 
+// The normal grading result remains unchanged. The additional IndexedDB write
+// happens asynchronously; loss of storage must not prevent practice.
 export function generate(moduleId, levelIdx) {
   const mod = moduleById(moduleId);
   const level = mod.levels[levelIdx];
+  let question;
   switch (moduleId) {
-    case 'pitch': return genPitch(mod, level, levelIdx);
-    case 'intervals': return genInterval(mod, level, levelIdx);
-    case 'chords': return genChord(mod, level, levelIdx);
-    case 'scales': return genScale(mod, level, levelIdx);
-    case 'degrees': return genDegree(mod, level, levelIdx);
-    case 'progressions': return genProgression(mod, level, levelIdx);
-    case 'melodies': return genMelody(mod, level, levelIdx);
+    case 'pitch': question = genPitch(mod, level, levelIdx); break;
+    case 'intervals': question = genInterval(mod, level, levelIdx); break;
+    case 'chords': question = genChord(mod, level, levelIdx); break;
+    case 'scales': question = genScale(mod, level, levelIdx); break;
+    case 'degrees': question = genDegree(mod, level, levelIdx); break;
+    case 'progressions': question = genProgression(mod, level, levelIdx); break;
+    case 'melodies': question = genMelody(mod, level, levelIdx); break;
+    default: return undefined;
   }
+  const originalGrade = question.grade;
+  question.grade = function(answer) {
+    const outcome = originalGrade.call(this, answer);
+    // Each graded answer is recorded, including mistakes. For a sequence,
+    // question.correctSeq and answeredSeq are both preserved in full.
+    try {
+      const {id} = appendTrial({
+        moduleId, levelIdx, correct: Boolean(outcome.correct),
+        rootMidi: question.historyRootMidi ?? null,
+        notesMidi: question.historyNotesMidi ?? null,
+        direction: question.historyDirection ?? null,
+        correctId: question.answerId ?? null,
+        answeredId: typeof answer === 'string' ? answer : null,
+        correctSeq: question.answerSeq ?? question.targetMidis ?? null,
+        answeredSeq: Array.isArray(answer) ? [...answer] : null,
+        given: question.given ?? null,
+        referenceMidi: question.historyReferenceMidi ?? null,
+        voicingStyle: question.historyVoicingStyle ?? null,
+        melodyTempo: question.historyMelodyTempo ?? null,
+      });
+      outcome.historyId = id;
+    } catch(error) { console.warn('Earpath attempt history failed',error); }
+    return outcome;
+  };
+  return question;
 }
 
 // ── Pitch: higher / lower / same ─────────────────────────────────────────────
@@ -59,6 +89,12 @@ function genPitch(mod, level, levelIdx) {
   ];
   const labels = { up: 'Higher', down: 'Lower', same: 'Same' };
   return {
+    historyRootMidi: a,
+    historyNotesMidi: [a,b],
+    historyDirection: picked.id,
+    historyReferenceMidi: null,
+    historyVoicingStyle: null,
+    historyMelodyTempo: null,
     moduleId: 'pitch', levelIdx, kind: 'choice', prompt: mod.prompt,
     options: ids.map(id => ({ id, label: labels[id] })),
     answerId: picked.id,
@@ -99,6 +135,12 @@ function genInterval(mod, level, levelIdx) {
   const dirWord = { a: 'ascending', d: 'descending', h: 'harmonic' }[picked.dir];
 
   return {
+    historyRootMidi: root,
+    historyNotesMidi: [root,root+(picked.dir === 'd' ? -semis : semis)],
+    historyDirection: picked.dir,
+    historyReferenceMidi: null,
+    historyVoicingStyle: null,
+    historyMelodyTempo: null,
     moduleId: 'intervals', levelIdx, kind: 'choice', prompt: mod.prompt,
     options: optionIds.map(id => ({ id, label: INTERVALS[id].name, sub: INTERVALS[id].short })),
     answerId: picked.id,
@@ -129,6 +171,12 @@ function genChord(mod, level, levelIdx) {
   const style = state.settings.chordStyle;
 
   return {
+    historyRootMidi: root,
+    historyNotesMidi: semis.map(s=>root+s),
+    historyDirection: null,
+    historyReferenceMidi: null,
+    historyVoicingStyle: style,
+    historyMelodyTempo: null,
     moduleId: 'chords', levelIdx, kind: 'choice', prompt: mod.prompt,
     options: level.items.map(id => ({ id, label: CHORDS[id].name, sub: CHORDS[id].short })),
     answerId: picked.id,
@@ -152,6 +200,12 @@ function genScale(mod, level, levelIdx) {
   const root = randInt(53, 67);
 
   return {
+    historyRootMidi: root,
+    historyNotesMidi: SCALES[picked.id].semis.map(s=>root+s),
+    historyDirection: null,
+    historyReferenceMidi: null,
+    historyVoicingStyle: null,
+    historyMelodyTempo: null,
     moduleId: 'scales', levelIdx, kind: 'choice', prompt: mod.prompt,
     options: level.items.map(id => ({ id, label: SCALES[id].name, sub: SCALES[id].sub })),
     answerId: picked.id,
@@ -219,6 +273,12 @@ function genDegree(mod, level, levelIdx) {
     ? DEGREES[id].solfege : DEGREES[id].number;
 
   return {
+    historyRootMidi: noteMidi,
+    historyNotesMidi: [noteMidi],
+    historyDirection: null,
+    historyReferenceMidi: keyRoot,
+    historyVoicingStyle: null,
+    historyMelodyTempo: null,
     moduleId: 'degrees', levelIdx, kind: 'choice', prompt: mod.prompt,
     options: level.items.map(id => ({ id, label: labelOf(id), sub: subOf(id) })),
     answerId: picked.id,
@@ -273,6 +333,12 @@ function genProgression(mod, level, levelIdx) {
   const given = seq.map((_, i) => i === 0 && level.startTonic);
 
   return {
+    historyRootMidi: keyRoot,
+    historyNotesMidi: null,
+    historyDirection: null,
+    historyReferenceMidi: keyRoot,
+    historyVoicingStyle: null,
+    historyMelodyTempo: null,
     moduleId: 'progressions', levelIdx, kind: 'sequence', prompt: mod.prompt,
     options: level.pool.map(id => ({ id, label: NUMERALS[id].name })),
     answerSeq: seq,
@@ -335,6 +401,12 @@ function genMelody(mod, level, levelIdx) {
   const events = [...cadence, ...Audio.shiftEvents(Audio.melodyEvents(midis, tempo), melodyStart)];
 
   return {
+    historyRootMidi: midis[0],
+    historyNotesMidi: [...midis],
+    historyDirection: null,
+    historyReferenceMidi: keyRoot,
+    historyVoicingStyle: null,
+    historyMelodyTempo: tempo,
     moduleId: 'melodies', levelIdx, kind: 'melody', prompt: mod.prompt,
     targetMidis: midis,
     firstGiven: !!level.firstGiven,   // first note shown as a hint; user still plays it

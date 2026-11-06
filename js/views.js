@@ -1,3 +1,4 @@
+import { mountAttemptDashboard } from './attempt-dashboard.js';
 // views.js — home dashboard, module pages, stats, settings, guide, onboarding.
 
 import { h, ring, fmtPct, go } from './ui.js';
@@ -238,6 +239,8 @@ export function renderStats(root) {
   }
 
   const playable = mid => ['intervals', 'chords', 'scales', 'degrees'].includes(mid);
+  const attemptDashboard = h('div', { class: 'eps-mount' });
+  queueMicrotask(() => mountAttemptDashboard(attemptDashboard));
 
   const page = h('div', { class: 'page' },
     topbar('stats'),
@@ -250,6 +253,7 @@ export function renderStats(root) {
 
     h('h2', {}, 'Last 12 weeks'),
     h('div', { class: 'agrid' }, cells),
+    attemptDashboard,
 
     h('h2', {}, 'Modules'),
     h('div', { class: 'stat-modules' },
