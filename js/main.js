@@ -4,6 +4,8 @@ import * as State from './state.js';
 import * as Audio from './audio.js';
 import { renderHome, renderModule, renderStats, renderSettings, renderGuide } from './views.js';
 import { renderPractice, renderDaily } from './session.js';
+import { initAnalytics, track } from './analytics.js';
+import { mountFeedback, setFeedbackVisible } from './feedback.js';
 
 const app = document.getElementById('app');
 let cleanup = null;
@@ -15,6 +17,10 @@ function route() {
 
   const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   const [view, a, b] = parts;
+
+  // Keep the floating feedback button out of the way while practicing.
+  setFeedbackVisible(view !== 'practice' && view !== 'daily');
+  track('screen', { view: view || 'home', module: view === 'practice' ? a : undefined });
 
   if (!view) cleanup = renderHome(app);
   else if (view === 'module' && a) cleanup = renderModule(app, a);
@@ -30,6 +36,13 @@ function route() {
 
 State.load();
 Audio.setVolume(State.state.settings.volume);
+initAnalytics();
+track('app_open', {
+  onboarded: State.state.onboarded,
+  total_answers: State.state.totals.a,
+  streak: State.state.streak.current,
+});
+mountFeedback();
 
 window.addEventListener('hashchange', route);
 route();

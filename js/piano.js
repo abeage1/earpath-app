@@ -16,7 +16,12 @@ export function createPiano(container, lo, hi, { onKey, tonic } = {}) {
   for (let m = lo; m <= hi; m++) if (!isBlack(m)) whites.push(m);
   const W = 100 / whites.length;
 
-  const root = h('div', { class: 'piano', role: 'group', 'aria-label': 'Piano keyboard' });
+  const root = h('div', {
+    class: 'piano', role: 'group', 'aria-label': 'Piano keyboard',
+    // Always fit the container — a scrolling answer keyboard hides notes and
+    // plays keys while panning. Cap key width so narrow ranges don't balloon.
+    style: { maxWidth: `${whites.length * 64}px` },
+  });
   const keyEls = {};
   let enabled = true;
 
